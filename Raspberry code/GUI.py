@@ -74,7 +74,7 @@ class cssden(QMainWindow):
         if colour.isValid():
             print(int(colour.red()), colour.green(), colour.blue())
             # self.btn.setStyleSheet(
-            "background-color: rgb(0,0,0);"
+            #"background-color: rgb(0,0,0);"
                                    # "border: rgb(255,0,0);"
                                    # "color: rgb(int(colour.red()),int(colour.green()),int(color.blue()));"
                                    # "font: bold italic 20pt 'Times New Roman';"
