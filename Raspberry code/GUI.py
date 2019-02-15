@@ -32,38 +32,41 @@ class cssden(QMainWindow):
         self.Ebtn.setStyleSheet("background-color: rgb(0,0,0);"
                                "border: 1px solid red;"
                                "color: rgb(255,255,255);"
-                               "font: bold italic 20pt 'Times New Roman';")
+                               "font: bold italic 12pt 'Times New Roman';")
         self.Ebtn.setGeometry(5,5,60,40)
 
         #Butts
         self.btn = QPushButton(self)
-        self.btn.setText("btn1")
+        self.btn.setText("Light 1")
         self.btn.clicked.connect(self.pressedbtn1)
         self.btn.setStyleSheet("background-color: rgb(0,0,0);"
-                               "border: 1px solid red;"
+                               "border: 2px solid red;"
                                "color: rgb(255,255,255);"
-                               "font: bold italic 20pt 'Times New Roman';")
+                               "font: bold italic 12pt 'Times New Roman';")
         self.btn.setGeometry(370,5,60,40)
         
         #Butts2
         self.btn2 = QPushButton(self)
-        self.btn2.setText("btn2")
+        self.btn2.setText("Light 2")
 
         self.btn2.clicked.connect(self.pressedbtn2)
         self.btn2.setStyleSheet("background-color: rgb(0,0,0);"
-                               "border: 1px solid red;"
+                               "border: 2px solid red;"
                                "color: rgb(255,255,255);"
-                               "font: bold italic 20pt 'Times New Roman';")
+                               "font: bold italic 12pt 'Times New Roman';")
         self.btn2.setGeometry(435,5,60,40)
 
         self.show()
-
-    #center
+        
+    # center
     def center(self):
         qr = self.frameGeometry()
         cp = QDesktopWidget().availableGeometry().center()
         qr.moveCenter(cp)
         self.move(qr.topLeft())
+        
+    def sendInfo(self, red, blue, green, light):
+        print("Red: %d; Blue: %d; Green: %d; Light address: %s" % (red, blue, green, light))
 		
     def exitButton(self):
 	    sys.exit()
@@ -72,23 +75,42 @@ class cssden(QMainWindow):
         self.hide()
         colour = QColorDialog.getColor()
         if colour.isValid():
-            print(int(colour.red()), colour.green(), colour.blue())
-            # self.btn.setStyleSheet(
-            #"background-color: rgb(0,0,0);"
-                                   # "border: rgb(255,0,0);"
-                                   # "color: rgb(int(colour.red()),int(colour.green()),int(color.blue()));"
-                                   # "font: bold italic 20pt 'Times New Roman';"
-                                   # )
+            red = int(colour.red())
+            blue = int(colour.blue())
+            green = int(colour.green())
+            light = "light1"
+            self.btn.setStyleSheet("font: bold italic 12pt 'Times New Roman';"
+                "background-color: rgb(0,0,0);"
+                "border-style: solid;"
+                "color: rgb(255,255,255);"
+                "border-width: 2px;" #"border-color: red;")
+                "border-color: rgb( %d, %d, %d);" % (colour.red(), colour.green(), colour.blue()))
+                
+            self.sendInfo(red, blue, green, light)
+                
         self.show()
         
     def pressedbtn2(self):
+        self.hide()
         colour = QColorDialog.getColor()
-        # self.btn2.setStyleSheet("background-color: rgb(0,0,0);"
-                               # "border: lpx solid red;"
-                               # "color: lpx colour.name();"
-                               # "font: bold italic 20pt 'Times New Roman';")
-
-                               
+        if colour.isValid():
+            red = int(colour.red())
+            blue = int(colour.blue())
+            green = int(colour.green())
+            light = "light2"
+            self.btn2.setStyleSheet("font: bold italic 12pt 'Times New Roman';"
+                "background-color: rgb(0,0,0);"
+                "border-style: solid;"
+                "color: rgb(255,255,255);"
+                "border-width: 2px;"
+                "border-color: rgb( %d, %d, %d);" % (colour.red(), colour.green(), colour.blue()))
+                
+            self.sendInfo(red, blue, green, light)
+                
+        self.show()
+        
+        
+        
 app = QApplication(sys.argv)
 app.setStyleSheet("QMainWindow{background-color: darkgray;border: 1px solid black}")
 
