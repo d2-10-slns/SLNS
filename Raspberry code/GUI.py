@@ -16,9 +16,10 @@ class cssden(QMainWindow):
         super().__init__()
         
         numAL = self.pingPong()
+        labelGeo=[]
         
-        print(numAL[0][0])
-        labelGeo = 80+numAL[1][0]*50
+        for i in range(len(numAL[0])):
+            labelGeo.append(65+numAL[1][i]*65)
 
 
         self.mwidget = QMainWindow(self)
@@ -32,12 +33,70 @@ class cssden(QMainWindow):
         
         #Label2
         self.label2 = QLabel(self)
+        
+        if len(numAL[0]) > 0:
+            self.label2.setStyleSheet(# "background-color: rgb(0,0,0);"
+                                   "border: 2px solid red;" )
+                                   # "color: rgb(255,255,255);"
+                                   # "font: bold italic 12pt 'Times New Roman';")
+            self.label2.setGeometry(5,15,labelGeo[0],50) # 249         
 
-        self.label2.setStyleSheet(# "background-color: rgb(0,0,0);"
-                               "border: 2px solid red;" )
-                               # "color: rgb(255,255,255);"
-                               # "font: bold italic 12pt 'Times New Roman';")
-        self.label2.setGeometry(5,15,labelGeo,50) # 249
+            #ArduinoButts
+            self.Abtn = QPushButton(self)
+            self.Abtn.setText("A1")
+            # self.Abtn.clicked.connect(self.pressedlgt1)
+            self.Abtn.setStyleSheet("background-color: rgb(0,0,0);"
+                           "border: 2px solid red;"
+                           "color: rgb(255,255,255);"
+                           "font: bold italic 10pt 'Times New Roman';")
+            self.Abtn.setGeometry(10,30,35,20)
+            
+            if numAL[1][0] > 0:
+                    #Butts
+                self.btn = QPushButton(self)
+                self.btn.setText("Light 1")
+                self.btn.clicked.connect(self.pressedlgt1)
+                self.btn.setStyleSheet("background-color: rgb(0,0,0);"
+                               "border: 2px solid red;"
+                               "color: rgb(255,255,255);"
+                               "font: bold italic 12pt 'Times New Roman';")
+                # self.btn.setGeometry(5,5,60,40)
+                self.btn.setGeometry(70,20,60,40)
+            if numAL[1][0] > 1:
+                    #Butts2
+                self.btn2 = QPushButton(self)
+                self.btn2.setText("Light 2")
+
+                self.btn2.clicked.connect(self.pressedlgt2)
+                self.btn2.setStyleSheet("background-color: rgb(0,0,0);"
+                               "border: 2px solid red;"
+                               "color: rgb(255,255,255);"
+                               "font: bold italic 12pt 'Times New Roman';")
+                self.btn2.setGeometry(135,20,60,40)   
+            if numAL[1][0] > 2:
+                    #Butts3
+                self.btn3 = QPushButton(self)
+                self.btn3.setText("Light 3")
+
+                self.btn3.clicked.connect(self.pressedlgt3)
+                self.btn3.setStyleSheet("background-color: rgb(0,0,0);"
+                               "border: 2px solid red;"
+                               "color: rgb(255,255,255);"
+                               "font: bold italic 12pt 'Times New Roman';")
+                self.btn3.setGeometry(200,20,60,40)
+                
+            if numAL[1][0] > 2:
+                    #Butts4
+                self.btn4 = QPushButton(self)
+                self.btn4.setText("Light 4")
+
+                self.btn4.clicked.connect(self.pressedlgt4)
+                self.btn4.setStyleSheet("background-color: rgb(0,0,0);"
+                               "border: 2px solid red;"
+                               "color: rgb(255,255,255);"
+                               "font: bold italic 12pt 'Times New Roman';")
+                self.btn4.setGeometry(265,20,60,40)
+            
         
         if len(numAL[0]) > 1:
             # Label2
@@ -47,7 +106,17 @@ class cssden(QMainWindow):
                                    "border: 2px solid red;" )
                                    # "color: rgb(255,255,255);"
                                    # "font: bold italic 12pt 'Times New Roman';")
-            self.label3.setGeometry(5,70,249,50)
+            self.label3.setGeometry(5,80,labelGeo[1],50)
+            
+            #ArduinoButts
+            self.Abtn2 = QPushButton(self)
+            self.Abtn2.setText("A1")
+            # self.Abtn.clicked.connect(self.pressedlgt1)
+            self.Abtn2.setStyleSheet("background-color: rgb(0,0,0);"
+                                   "border: 2px solid red;"
+                                   "color: rgb(255,255,255);"
+                                   "font: bold italic 10pt 'Times New Roman';")
+            self.Abtn2.setGeometry(10,95,35,20)
         
         # Label2
         # self.label4 = QLabel(self)
@@ -85,49 +154,6 @@ class cssden(QMainWindow):
                                "font: bold italic 12pt 'Times New Roman';")
         self.Ebtn.setGeometry(435,20,60,40)
         
-        #ArduinoButts
-        self.Abtn = QPushButton(self)
-        self.Abtn.setText("A1")
-        # self.Abtn.clicked.connect(self.pressedlgt1)
-        self.Abtn.setStyleSheet("background-color: rgb(0,0,0);"
-                               "border: 2px solid red;"
-                               "color: rgb(255,255,255);"
-                               "font: bold italic 10pt 'Times New Roman';")
-        self.Abtn.setGeometry(10,35,35,20)
-
-        #Butts
-        self.btn = QPushButton(self)
-        self.btn.setText("Light 1")
-        self.btn.clicked.connect(self.pressedlgt1)
-        self.btn.setStyleSheet("background-color: rgb(0,0,0);"
-                               "border: 2px solid red;"
-                               "color: rgb(255,255,255);"
-                               "font: bold italic 12pt 'Times New Roman';")
-        # self.btn.setGeometry(5,5,60,40)
-        self.btn.setGeometry(50,20,60,40)
-        
-        #Butts2
-        self.btn2 = QPushButton(self)
-        self.btn2.setText("Light 2")
-
-        self.btn2.clicked.connect(self.pressedlgt2)
-        self.btn2.setStyleSheet("background-color: rgb(0,0,0);"
-                               "border: 2px solid red;"
-                               "color: rgb(255,255,255);"
-                               "font: bold italic 12pt 'Times New Roman';")
-        self.btn2.setGeometry(115,20,60,40)
-        
-        #Butts3
-        # self.btn3 = QPushButton(self)
-        # self.btn3.setText("Light 3")
-
-        # self.btn3.clicked.connect(self.pressedlgt2)
-        # self.btn3.setStyleSheet("background-color: rgb(0,0,0);"
-                               # "border: 2px solid red;"
-                               # "color: rgb(255,255,255);"
-                               # "font: bold italic 12pt 'Times New Roman';")
-        # self.btn3.setGeometry(180,20,60,40)
-        
         # Label1
         self.label1 = QLabel(self)
         self.label1.setText("Sensor Reading: %d" % self.sensorRead())
@@ -136,7 +162,7 @@ class cssden(QMainWindow):
                                "border: 2px solid red;" )
                                # "color: rgb(255,255,255);"
                                # "font: bold italic 12pt 'Times New Roman';")
-        self.label1.setGeometry(335,200,120,40)
+        self.label1.setGeometry(350,200,120,40)
 
         self.show()
         
@@ -191,12 +217,50 @@ class cssden(QMainWindow):
                 
         self.show()
         
+    def pressedlgt3(self):
+        self.hide()
+        colour = QColorDialog.getColor()
+        if colour.isValid():
+            red = int(colour.red())
+            blue = int(colour.blue())
+            green = int(colour.green())
+            light = "light3"
+            self.btn3.setStyleSheet("font: bold italic 12pt 'Times New Roman';"
+                "background-color: rgb(0,0,0);"
+                "border-style: solid;"
+                "color: rgb(255,255,255);"
+                "border-width: 2px;"
+                "border-color: rgb( %d, %d, %d);" % (colour.red(), colour.green(), colour.blue()))
+                
+            self.sendInfo(red, blue, green, light)
+                
+        self.show()
+        
+    def pressedlgt4(self):
+        self.hide()
+        colour = QColorDialog.getColor()
+        if colour.isValid():
+            red = int(colour.red())
+            blue = int(colour.blue())
+            green = int(colour.green())
+            light = "light4"
+            self.btn4.setStyleSheet("font: bold italic 12pt 'Times New Roman';"
+                "background-color: rgb(0,0,0);"
+                "border-style: solid;"
+                "color: rgb(255,255,255);"
+                "border-width: 2px;"
+                "border-color: rgb( %d, %d, %d);" % (colour.red(), colour.green(), colour.blue()))
+                
+            self.sendInfo(red, blue, green, light)
+                
+        self.show()
+        
         
     def sensorRead(self):
         return 200
         
     def pingPong(self):
-        return [[1,1],[2,1]]
+        return [[1,1],[4,0]]
         
         
         
