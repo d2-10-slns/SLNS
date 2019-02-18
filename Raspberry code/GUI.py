@@ -17,8 +17,8 @@ class cssden(QMainWindow):
         
         numAL = self.pingPong()
         
-        print(len(numAL[1]))
-        labelGeo = 80+len(numAL[1])*50
+        print(numAL[0][0])
+        labelGeo = 80+numAL[1][0]*50
 
 
         self.mwidget = QMainWindow(self)
@@ -196,7 +196,7 @@ class cssden(QMainWindow):
         return 200
         
     def pingPong(self):
-        return [[1,1],[1,1]]
+        return [[1,1],[2,1]]
         
         
         
