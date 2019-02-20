@@ -39,7 +39,7 @@ class cssden(QMainWindow):
         buttonNum = [1, 2]
         
         #size
-        self.setFixedSize(800, 460)
+        self.setFixedSize(800, 480)
         self.center
         
         #Label2
