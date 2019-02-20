@@ -9,6 +9,17 @@ from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtGui import QIcon,QFont,QPixmap,QPalette, QColor
 from PyQt5.QtCore import QCoreApplication, Qt,QBasicTimer
 
+class Lights():
+    def __init__(self, LightNum, Add, redd, greenn, bluee):
+        self.LightNum = QPushButton()    
+        self.Add = 0
+        self.redd = 255
+        self.greenn = 0
+        self.bluee = 0
+        
+class Joe():
+    def _init_(self):
+        self.btn = []
 
 
 class cssden(QMainWindow):
@@ -28,23 +39,20 @@ class cssden(QMainWindow):
         buttonNum = [1, 2]
         
         #size
-        self.setFixedSize(500, 300)
+        self.setFixedSize(800, 460)
         self.center
         
         #Label2
         self.label2 = QLabel(self)
         
         if len(numAL[0]) > 0:
-            self.label2.setStyleSheet(# "background-color: rgb(0,0,0);"
-                                   "border: 2px solid red;" )
-                                   # "color: rgb(255,255,255);"
-                                   # "font: bold italic 12pt 'Times New Roman';")
+            self.label2.setStyleSheet("border: 2px solid red;" )
             self.label2.setGeometry(5,15,labelGeo[0],50) # 249         
 
             #ArduinoButts
             self.Abtn = QPushButton(self)
             self.Abtn.setText("A1")
-            # self.Abtn.clicked.connect(self.pressedlgt1)
+            self.Abtn.clicked.connect(self.pressedard1)
             self.Abtn.setStyleSheet("background-color: rgb(0,0,0);"
                            "border: 2px solid red;"
                            "color: rgb(255,255,255);"
@@ -253,6 +261,44 @@ class cssden(QMainWindow):
                 
             self.sendInfo(red, blue, green, light)
                 
+        self.show()
+        
+    def pressedard1(self):
+        self.hide()
+        colour = QColorDialog.getColor()
+        if colour.isValid():
+            red = int(colour.red())
+            blue = int(colour.blue())
+            green = int(colour.green())
+            light = ["light1", "light2", "light3", "light4"]
+            self.btn4.setStyleSheet("font: bold italic 12pt 'Times New Roman';"
+                "background-color: rgb(0,0,0);"
+                "border-style: solid;"
+                "color: rgb(255,255,255);"
+                "border-width: 2px;"
+                "border-color: rgb( %d, %d, %d);" % (colour.red(), colour.green(), colour.blue()))
+            self.btn3.setStyleSheet("font: bold italic 12pt 'Times New Roman';"
+                "background-color: rgb(0,0,0);"
+                "border-style: solid;"
+                "color: rgb(255,255,255);"
+                "border-width: 2px;"
+                "border-color: rgb( %d, %d, %d);" % (colour.red(), colour.green(), colour.blue()))
+            self.btn2.setStyleSheet("font: bold italic 12pt 'Times New Roman';"
+                "background-color: rgb(0,0,0);"
+                "border-style: solid;"
+                "color: rgb(255,255,255);"
+                "border-width: 2px;"
+                "border-color: rgb( %d, %d, %d);" % (colour.red(), colour.green(), colour.blue()))
+            self.btn.setStyleSheet("font: bold italic 12pt 'Times New Roman';"
+                "background-color: rgb(0,0,0);"
+                "border-style: solid;"
+                "color: rgb(255,255,255);"
+                "border-width: 2px;"
+                "border-color: rgb( %d, %d, %d);" % (colour.red(), colour.green(), colour.blue()))                
+                
+            for i in range(len(light)):
+                self.sendInfo(red, blue, green, light[i])
+            
         self.show()
         
         
