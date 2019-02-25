@@ -1,6 +1,7 @@
 # RaspberryPi username: raspberrypi; password: Glados
 
 import sys
+from functools import partial
 
 from PyQt5.QtWidgets import (QMessageBox,QApplication, QWidget, QToolTip, QPushButton,
                              QDesktopWidget, QMainWindow, QAction, qApp, QToolBar, QVBoxLayout,
@@ -12,7 +13,8 @@ from PyQt5.QtGui import QIcon,QFont,QPixmap,QPalette, QColor
 from PyQt5.QtCore import QCoreApplication, Qt,QBasicTimer
 
 class Light():
-    lightbtn = 0    
+    lightbtn = 0 
+    lightname = ''    
     laddr = 0
     redd = 255
     greenn = 0
@@ -22,7 +24,7 @@ class Light():
         # print(lightbtn, self.laddr, self.redd, self.greenn, self.bluee)
         
 class Joe():
-    lights = [[],[]]
+    lights = [[]]
     def _init_(self):
         print("no")
 
@@ -34,7 +36,9 @@ class cssden(QMainWindow):
         self.mwidget = QMainWindow(self)
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         
-        bill = Joe()
+        self.elbows = Joe()
+        box = []
+        lightcount = 0;
         
         numAL = self.pingPong()
         labelGeo=[]
@@ -43,12 +47,37 @@ class cssden(QMainWindow):
             labelGeo.append(65+numAL[1][i]*65)
             
         for i in range(len(numAL[0])):
-            bill.lights[0].append(QPushButton(self))
-            for j in range (len(numAL[1])):
-                bill.lights[1].append(Light())
+            self.elbows.lights[0].append(QPushButton(self))
+            self.elbows.lights.append([])
+            box.append(QLabel(self))
+            box[i].setStyleSheet("border: 2px solid red;" )
+            box[i].setGeometry(5,15+55*i,65+numAL[1][i]*65,50)
+            for j in range (numAL[1][i]):
+                self.elbows.lights[i+1].append(Light())
+                lightcount = lightcount + 1
+                # self.elbows.lights[i+1].append(Light())
+                self.elbows.lights[i+1][j].lightname = "light%d" % (lightcount)
+                self.elbows.lights[i+1][j].lightbtn = QPushButton(self)
+                self.elbows.lights[i+1][j].lightbtn.setText("Light %d" % (lightcount))
+                # print(self.elbows.lights[1][j].lightname)
+                self.elbows.lights[i+1][j].lightbtn.clicked.connect(partial(self.lgtPressed1,i,j))
+                self.elbows.lights[i+1][j].lightbtn.setStyleSheet("background-color: rgb(0,0,0);"
+                               "border: 2px solid red;"
+                               "color: rgb(255,255,255);"
+                               "font: bold italic 12pt 'Times New Roman';")
+                self.elbows.lights[i+1][j].lightbtn.setGeometry(70 + 65*j,20 + 55*i,60,40)
+                # print(self.elbows.lights[1][j].lightname)
+        
+        # self.elbows.lights[2].append(QPushButton(self))        
+        print(self.elbows.lights[2])
+        print(self.elbows.lights)
 
-        # print(bill.lights[1][0].lightbtn)
-
+        # print(self.elbows.lights[1][0].lightbtn)
+        # print(self.elbows.lights[1][1].lightbtn)
+        # print(self.elbows.lights[1][2].lightbtn)
+        # print(self.elbows.lights[1][3].lightbtn)
+        
+        # self.elbows.lights[1][0].lightbtn.clicked.connect(lambda: self.lgtPressed(self.elbows.lights[1][0]))
         buttonNum = [1, 2]
         
         #size
@@ -57,53 +86,56 @@ class cssden(QMainWindow):
         
         #Label2
         self.label2 = QLabel(self)
-        print(bill.lights)
+        # print(self.elbows.lights)
         for i in range(len(numAL[0])):
-            self.label2.setStyleSheet("border: 2px solid red;" )
-            self.label2.setGeometry(5,15,labelGeo[0],50) # 249         
+            print(i)
+            # box[i].setStyleSheet("border: 2px solid red;" )
+            # box[i].setGeometry(5,15+55*i,labelGeo[i],50) # 249         
 
-            #ArduinoButts
-            bill.lights[0][i].setText("A%d" % (i+1))
-            bill.lights[0][i].clicked.connect(lambda: self.pressedard(bill, i))
-            bill.lights[0][i].setStyleSheet("background-color: rgb(0,0,0);"
+            # Creates arduino buttons and places them on the window
+            self.elbows.lights[0][i].setText("A%d" % (i+1))
+            self.elbows.lights[0][i].clicked.connect(partial(self.pressedard,self.elbows,i))
+            self.elbows.lights[0][i].setStyleSheet("background-color: rgb(0,0,0);"
                            "border: 2px solid red;"
                            "color: rgb(255,255,255);"
                            "font: bold italic 10pt 'Times New Roman';")
-            bill.lights[0][i].setGeometry(10, 30+(65*i), 35, 20)
+            self.elbows.lights[0][i].setGeometry(10, 30+55*i, 35, 20)
+            self.elbows.lights[0][i].raise_()
             
-            for j in range(numAL[1][i]):
-                #Butts
-                bill.lights[1][j].lightbtn = QPushButton(self)
-                bill.lights[1][j].lightbtn.setText("Light %d" % (j+1))
-                print(bill.lights[1][j].lightbtn)
-                bill.lights[1][j].lightbtn.clicked.connect(lambda: self.lgtPressed(bill.lights[1][j]))
-                bill.lights[1][j].lightbtn.setStyleSheet("background-color: rgb(0,0,0);"
-                               "border: 2px solid red;"
-                               "color: rgb(255,255,255);"
-                               "font: bold italic 12pt 'Times New Roman';")
-                bill.lights[1][j].lightbtn.setGeometry(70 + 65*j,20,60,40)
+            # box[i].setStyleSheet("border: 2px solid red;" )
+            # box[i].setGeometry(5,15+55*i,labelGeo[i],50) # 249
+            
+            # for j in range(numAL[1][i]):
+                # Creates light buttons and places them on the window
+                # self.elbows.lights[1][j].lightbtn = QPushButton(self)
+                # self.elbows.lights[1][j].lightbtn.setText("Light %d" % (j+1))
+                # print(self.elbows.lights[1][j])
+                # self.elbows.lights[1][j].lightbtn.clicked.connect(lambda: self.lgtPressed(self.elbows.lights[1][j]))
+                # self.elbows.lights[1][j].lightbtn.setStyleSheet("background-color: rgb(0,0,0);"
+                               # "border: 2px solid red;"
+                               # "color: rgb(255,255,255);"
+                               # "font: bold italic 12pt 'Times New Roman';")
+                # self.elbows.lights[1][j].lightbtn.setGeometry(70 + 65*j,20,60,40)
 
             
+        # print(self.elbows.lights[1][0].lightname)
         
-        if len(numAL[0]) > 1:
+        # if len(numAL[0]) > 1:
             # Label2
-            self.label3 = QLabel(self)
+            # self.label3 = QLabel(self)
 
-            self.label3.setStyleSheet(# "background-color: rgb(0,0,0);"
-                                   "border: 2px solid red;" )
-                                   # "color: rgb(255,255,255);"
-                                   # "font: bold italic 12pt 'Times New Roman';")
-            self.label3.setGeometry(5,80,labelGeo[1],50)
+            # self.label3.setStyleSheet("border: 2px solid red;" )
+            # self.label3.setGeometry(5,80,labelGeo[1],50)
             
             #ArduinoButts
-            self.Abtn2 = QPushButton(self)
-            self.Abtn2.setText("A1")
+            # self.Abtn2 = QPushButton(self)
+            # self.Abtn2.setText("A1")
             # self.Abtn.clicked.connect(self.pressedlgt1)
-            self.Abtn2.setStyleSheet("background-color: rgb(0,0,0);"
-                                   "border: 2px solid red;"
-                                   "color: rgb(255,255,255);"
-                                   "font: bold italic 10pt 'Times New Roman';")
-            self.Abtn2.setGeometry(10,95,35,20)
+            # self.Abtn2.setStyleSheet("background-color: rgb(0,0,0);"
+                                   # "border: 2px solid red;"
+                                   # "color: rgb(255,255,255);"
+                                   # "font: bold italic 10pt 'Times New Roman';")
+            # self.Abtn2.setGeometry(10,95,35,20)
         
         # Label2
         # self.label4 = QLabel(self)
@@ -139,17 +171,17 @@ class cssden(QMainWindow):
                                "border: 1px solid red;"
                                "color: rgb(255,255,255);"
                                "font: bold italic 12pt 'Times New Roman';")
-        self.Ebtn.setGeometry(435,20,60,40)
+        self.Ebtn.setGeometry(735,20,60,40)
         
         # Label1
-        self.label1 = QLabel(self)
-        self.label1.setText("Sensor Reading: %d" % self.sensorRead())
+        # self.label1 = QLabel(self)
+        # self.label1.setText("Sensor Reading: %d" % self.sensorRead())
 
-        self.label1.setStyleSheet(# "background-color: rgb(0,0,0);"
-                               "border: 2px solid red;" )
+        # self.label1.setStyleSheet(# "background-color: rgb(0,0,0);"
+                               # "border: 2px solid red;" )
                                # "color: rgb(255,255,255);"
                                # "font: bold italic 12pt 'Times New Roman';")
-        self.label1.setGeometry(350,200,120,40)
+        # self.label1.setGeometry(350,200,120,40)
 
         self.show()
         
@@ -169,12 +201,13 @@ class cssden(QMainWindow):
     def lgtPressed(self, lightP):
         self.hide()
         colour = QColorDialog.getColor()
+        print(lightP.lightbtn)
         if colour.isValid():
             lightP.redd = int(colour.red())
             lightP.bluee = int(colour.blue())
-            green = int(colour.green())
-            light = "light1"
-            print(lightP)
+            lightP.greenn = int(colour.green())
+            light = lightP.lightname
+            # print(lightP.lightname)
             lightP.lightbtn.setStyleSheet("font: bold italic 12pt 'Times New Roman';"
                 "background-color: rgb(0,0,0);"
                 "border-style: solid;"
@@ -182,11 +215,32 @@ class cssden(QMainWindow):
                 "border-width: 2px;" #"border-color: red;")
                 "border-color: rgb( %d, %d, %d);" % (colour.red(), colour.green(), colour.blue()))
                 
-            self.sendInfo(lightP.redd, lightP.bluee, green, light)
+            self.sendInfo(lightP.redd, lightP.bluee, lightP.greenn, light)
                 
         self.show()
         
-    def pressedard(self, bill, ard):
+    def lgtPressed1(self, ardnum,lgtnum):
+        self.hide()
+        colour = QColorDialog.getColor()
+        # print(lightP.lightbtn)
+        if colour.isValid():
+            red = int(colour.red())
+            blue = int(colour.blue())
+            green = int(colour.green())
+            light = self.elbows.lights[ardnum+1][lgtnum].lightname
+            # print(lightP.lightname)
+            self.elbows.lights[ardnum+1][lgtnum].lightbtn.setStyleSheet("font: bold italic 12pt 'Times New Roman';"
+                "background-color: rgb(0,0,0);"
+                "border-style: solid;"
+                "color: rgb(255,255,255);"
+                "border-width: 2px;" #"border-color: red;")
+                "border-color: rgb( %d, %d, %d);" % (colour.red(), colour.green(), colour.blue()))
+                
+            self.sendInfo(red, blue, green, light)
+                
+        self.show()
+        
+    def pressedard(self, selbows, ard):
         self.hide()
         colour = QColorDialog.getColor()
         red = int(colour.red())
@@ -194,20 +248,20 @@ class cssden(QMainWindow):
         green = int(colour.green())
         
         if colour.isValid():
-            print(len(bill.lights[ard]))
-            for i in range(len(bill.lights[ard])):
-                bill.lights[ard][i].lightbtn.redd = int(colour.red())
-                bill.lights[ard][i].lightbtn.bluee = int(colour.blue())
-                bill.lights[ard][i].lightbtn.greenn = int(colour.green())
-                bill.lights[ard][i].lightbtn.setStyleSheet("font: bold italic 12pt 'Times New Roman';"
+            # print(len(self.elbows.lights[ard]))
+            for i in range(len(selbows.lights[ard+1])):
+                selbows.lights[ard+1][i].lightbtn.redd = int(colour.red())
+                selbows.lights[ard+1][i].lightbtn.bluee = int(colour.blue())
+                selbows.lights[ard+1][i].lightbtn.greenn = int(colour.green())
+                selbows.lights[ard+1][i].lightbtn.setStyleSheet("font: bold italic 12pt 'Times New Roman';"
                     "background-color: rgb(0,0,0);"
                     "border-style: solid;"
                     "color: rgb(255,255,255);"
                     "border-width: 2px;"
                     "border-color: rgb( %d, %d, %d);" % (colour.red(), colour.green(), colour.blue()))
                   
-        for i in range(len(light)):
-                self.sendInfo(red, blue, green, bill.lights[1][i])
+        for i in range(len(self.elbows.lights[ard+1])):
+                self.sendInfo(red, blue, green, self.elbows.lights[ard+1][i])
                 
         self.show()
         
@@ -254,7 +308,7 @@ class cssden(QMainWindow):
         return 200
         
     def pingPong(self):
-        return [[1,1],[4,0]]
+        return [[1,1,1,1,1,1,1,1],[8,8,8,8,8,8,8,8]]
         
         
         

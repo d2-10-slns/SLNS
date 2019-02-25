@@ -181,6 +181,7 @@ class cssden(QMainWindow):
         
     def sendInfo(self, red, blue, green, ard, light):
         print("Red: %d; Blue: %d; Green: %d; Arduino Adress; %s; Light address: %s" % (red, blue, green, ard, light))
+        
 		
     def exitButton(self):
 	    sys.exit()
