@@ -29,7 +29,7 @@ class Joe():
         print("no")
 
 
-class cssden(QMainWindow):
+class Control(QMainWindow):
     def __init__(self):
         super().__init__()
         
@@ -69,8 +69,8 @@ class cssden(QMainWindow):
                 # print(self.elbows.lights[1][j].lightname)
         
         # self.elbows.lights[2].append(QPushButton(self))        
-        print(self.elbows.lights[2])
-        print(self.elbows.lights)
+        # print(self.elbows.lights[2])
+        # print(self.elbows.lights)
 
         # print(self.elbows.lights[1][0].lightbtn)
         # print(self.elbows.lights[1][1].lightbtn)
@@ -88,7 +88,7 @@ class cssden(QMainWindow):
         self.label2 = QLabel(self)
         # print(self.elbows.lights)
         for i in range(len(numAL[0])):
-            print(i)
+            # print(i)
             # box[i].setStyleSheet("border: 2px solid red;" )
             # box[i].setGeometry(5,15+55*i,labelGeo[i],50) # 249         
 
@@ -261,7 +261,7 @@ class cssden(QMainWindow):
                     "border-color: rgb( %d, %d, %d);" % (colour.red(), colour.green(), colour.blue()))
                   
         for i in range(len(self.elbows.lights[ard+1])):
-                self.sendInfo(red, blue, green, self.elbows.lights[ard+1][i])
+                self.sendInfo(red, blue, green, self.elbows.lights[ard+1][i].lightname)
                 
         self.show()
         
@@ -315,5 +315,5 @@ class cssden(QMainWindow):
 app = QApplication(sys.argv)
 app.setStyleSheet("QMainWindow{background-color: darkgray;border: 1px solid black}")
 
-ex = cssden()
+ex = Control()
 sys.exit(app.exec_())
