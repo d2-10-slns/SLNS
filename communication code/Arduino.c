@@ -42,4 +42,4 @@ void loop() {
 //  if (client == true){                    <----- This check screwed it up. Not needed.
 //    Serial.println("Client Connected.");
 //    server.write(client.read());        //send back to the client whatever     the client sent to us.
-//  }
+  }
