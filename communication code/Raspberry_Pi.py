@@ -12,8 +12,8 @@ print ("Connecting to " + host)
 
 port = 23
 
-s = socket(AF_INET, SOCK_STREAM)
-print "Socket made"
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+print ("Socket made")
 
 ready = select.select([s],[],[],timeout)
 
@@ -28,7 +28,7 @@ if ready[0]:
 
     data = s.recv(4096)
     print("[INFO] Data received")
-    print data
+    print (data)
 else:
     s.connect((host2,port))
     print("Connection made")
@@ -40,13 +40,12 @@ else:
 
         data = s.recv(4096)
         print("[INFO] Data received")
-        print data
-		continue
-	if data=='Testu'
+        print (data)
+    if data == 'Testu':
 	    print("That's all folks")
-	else
+    else:
         print("You fucked up")	
-return string
+
 
 
 
