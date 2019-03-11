@@ -8,7 +8,7 @@ byte mac[] = {0x90, 0xA2, 0xDA, 0x0f, 0x25, 0xE7};
 //ip Address for shield
 byte ip[] = {192,168,1,113}; //We have to create a similar ip address
 //ip Address for Galileo
-byte ip2[] = 
+byte ip2[] = {192,168,1,69};
 
 //Use port 23 for telnet
 EthernetServer server = EthernetServer(23);
@@ -43,3 +43,9 @@ void loop() {
 //    Serial.println("Client Connected.");
 //    server.write(client.read());        //send back to the client whatever     the client sent to us.
   }
+int main() {
+
+	setup();
+	loop();
+	return 0;
+  }	
