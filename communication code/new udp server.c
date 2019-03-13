@@ -1,3 +1,6 @@
+// to configure pi as an ethernet router:
+// https://raspberrypi.stackexchange.com/questions/71933/configure-rpi-3-for-ethernet-router-with-jessie
+
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
