@@ -21,8 +21,8 @@ void setup() {
 
   DmxSimple.maxChannel(7);
   DmxSimple.usePin(3);   // digital output for DMX serial data
-  DmxSimple.write(5, 255);     // set fixture #1 master brightness to max
-  DmxSimple.write(10, 255);    // set fixture #2 master brightness to max
+  DmxSimple.write(1, 255);     // set fixture #1 master brightness to max
+  DmxSimple.write(8, 255);    // set fixture #2 master brightness to max
 
   Serial.println("DMX Manual Control");
   Serial.println();
