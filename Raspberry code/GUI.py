@@ -2,6 +2,9 @@
 
 import sys
 from functools import partial
+import socket
+import platform
+import os
 
 from PyQt5.QtWidgets import (QMessageBox,QApplication, QWidget, QToolTip, QPushButton,
                              QDesktopWidget, QMainWindow, QAction, qApp, QToolBar, QVBoxLayout,
@@ -12,10 +15,16 @@ from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtGui import QIcon,QFont,QPixmap,QPalette, QColor
 from PyQt5.QtCore import QCoreApplication, Qt,QBasicTimer
 
+UDP_IP = "192.168.1.177"
+UDP_PORT = 5004
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
 class Light():
     lightbtn = 0 
     lightname = ''    
     laddr = 0
+    lIP = "192.168.1.177"
+    lard = 0
     redd = 255
     greenn = 0
     bluee = 0
@@ -59,6 +68,8 @@ class Control(QMainWindow):
                 self.elbows.lights[i+1][j].lightname = "light%d" % (lightcount)
                 self.elbows.lights[i+1][j].lightbtn = QPushButton(self)
                 self.elbows.lights[i+1][j].lightbtn.setText("Light %d" % (lightcount))
+                self.elbows.lights[i+1][j].lard = i+1
+                self.elbows.lights[i+1][j].laddr = j+1
                 # print(self.elbows.lights[1][j].lightname)
                 self.elbows.lights[i+1][j].lightbtn.clicked.connect(partial(self.lgtPressed1,i,j))
                 self.elbows.lights[i+1][j].lightbtn.setStyleSheet("background-color: rgb(0,0,0);"
@@ -192,8 +203,11 @@ class Control(QMainWindow):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
         
-    def sendInfo(self, red, blue, green, light):
-        print("Red: %d; Blue: %d; Green: %d; Light address: %s" % (red, blue, green, light))
+    def sendInfo(self, red, blue, green, ard, light):
+        print("Red: %d; Blue: %d; Green: %d; Light address: %d" % (red, blue, green, light))
+        sock.sendto(("%d %d %d %d %d" % (ard, light, red, green, blue)).encode('utf-8'), (UDP_IP, UDP_PORT))
+        print("%d %d %d %d %d" % (ard, light, red, green, blue))
+        # print("%d %d %d %d %d" % (ard, light, red, green, blue).encode('utf-8'))
 		
     def exitButton(self):
 	    sys.exit()
@@ -215,7 +229,7 @@ class Control(QMainWindow):
                 "border-width: 2px;" #"border-color: red;")
                 "border-color: rgb( %d, %d, %d);" % (colour.red(), colour.green(), colour.blue()))
                 
-            self.sendInfo(lightP.redd, lightP.bluee, lightP.greenn, light)
+            self.sendInfo(lightP.redd, lightP.bluee, lightP.greenn, lightP.lard+1, lightP.laddr+1)
                 
         self.show()
         
@@ -236,7 +250,7 @@ class Control(QMainWindow):
                 "border-width: 2px;" #"border-color: red;")
                 "border-color: rgb( %d, %d, %d);" % (colour.red(), colour.green(), colour.blue()))
                 
-            self.sendInfo(red, blue, green, light)
+            self.sendInfo(red, blue, green, ardnum+1, lgtnum+1)
                 
         self.show()
         
@@ -261,47 +275,47 @@ class Control(QMainWindow):
                     "border-color: rgb( %d, %d, %d);" % (colour.red(), colour.green(), colour.blue()))
                   
         for i in range(len(self.elbows.lights[ard+1])):
-                self.sendInfo(red, blue, green, self.elbows.lights[ard+1][i].lightname)
+                self.sendInfo(red, blue, green, self.elbows.lights[ard+1][i].lard, self.elbows.lights[ard+1][i].laddr)
                 
         self.show()
         
-    def pressedard1(self):
-        self.hide()
-        colour = QColorDialog.getColor()
-        if colour.isValid():
-            red = int(colour.red())
-            blue = int(colour.blue())
-            green = int(colour.green())
-            light = ["light1", "light2", "light3", "light4"]
-            self.btn4.setStyleSheet("font: bold italic 12pt 'Times New Roman';"
-                "background-color: rgb(0,0,0);"
-                "border-style: solid;"
-                "color: rgb(255,255,255);"
-                "border-width: 2px;"
-                "border-color: rgb( %d, %d, %d);" % (colour.red(), colour.green(), colour.blue()))
-            self.btn3.setStyleSheet("font: bold italic 12pt 'Times New Roman';"
-                "background-color: rgb(0,0,0);"
-                "border-style: solid;"
-                "color: rgb(255,255,255);"
-                "border-width: 2px;"
-                "border-color: rgb( %d, %d, %d);" % (colour.red(), colour.green(), colour.blue()))
-            self.btn2.setStyleSheet("font: bold italic 12pt 'Times New Roman';"
-                "background-color: rgb(0,0,0);"
-                "border-style: solid;"
-                "color: rgb(255,255,255);"
-                "border-width: 2px;"
-                "border-color: rgb( %d, %d, %d);" % (colour.red(), colour.green(), colour.blue()))
-            self.btn.setStyleSheet("font: bold italic 12pt 'Times New Roman';"
-                "background-color: rgb(0,0,0);"
-                "border-style: solid;"
-                "color: rgb(255,255,255);"
-                "border-width: 2px;"
-                "border-color: rgb( %d, %d, %d);" % (colour.red(), colour.green(), colour.blue()))                
+    # def pressedard1(self):
+        # self.hide()
+        # colour = QColorDialog.getColor()
+        # if colour.isValid():
+            # red = int(colour.red())
+            # blue = int(colour.blue())
+            # green = int(colour.green())
+            # light = ["light1", "light2", "light3", "light4"]
+            # self.btn4.setStyleSheet("font: bold italic 12pt 'Times New Roman';"
+                # "background-color: rgb(0,0,0);"
+                # "border-style: solid;"
+                # "color: rgb(255,255,255);"
+                # "border-width: 2px;"
+                # "border-color: rgb( %d, %d, %d);" % (colour.red(), colour.green(), colour.blue()))
+            # self.btn3.setStyleSheet("font: bold italic 12pt 'Times New Roman';"
+                # "background-color: rgb(0,0,0);"
+                # "border-style: solid;"
+                # "color: rgb(255,255,255);"
+                # "border-width: 2px;"
+                # "border-color: rgb( %d, %d, %d);" % (colour.red(), colour.green(), colour.blue()))
+            # self.btn2.setStyleSheet("font: bold italic 12pt 'Times New Roman';"
+                # "background-color: rgb(0,0,0);"
+                # "border-style: solid;"
+                # "color: rgb(255,255,255);"
+                # "border-width: 2px;"
+                # "border-color: rgb( %d, %d, %d);" % (colour.red(), colour.green(), colour.blue()))
+            # self.btn.setStyleSheet("font: bold italic 12pt 'Times New Roman';"
+                # "background-color: rgb(0,0,0);"
+                # "border-style: solid;"
+                # "color: rgb(255,255,255);"
+                # "border-width: 2px;"
+                # "border-color: rgb( %d, %d, %d);" % (colour.red(), colour.green(), colour.blue()))                
                 
-            for i in range(len(light)):
-                self.sendInfo(red, blue, green, light[i])
+            # for i in range(len(light)):
+                # self.sendInfo(red, blue, green, light[i])
             
-        self.show()
+        # self.show()
         
         
     def sensorRead(self):
