@@ -98,7 +98,7 @@ void loop() {
 
     // read the packet into packetBufffer
     Udp.read(packetBuffer, UDP_TX_PACKET_MAX_SIZE);
-	char str[] = packetBuffer; 
+	// char str[] = packetBuffer; 
 	int init_size = strlen(str);
 	char delim[] = " ";
 
