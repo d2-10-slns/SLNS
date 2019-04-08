@@ -20,6 +20,10 @@
 char str[20];
 char chanStr[3];
 char valStr[3];
+int chan;
+int valr;
+int valg;
+int valb;
 
 // Enter a MAC address and IP address for your controller below.
 // The IP address will be dependent on your local network:
@@ -34,8 +38,9 @@ unsigned int localPort = 8888;      // local port to listen on
 char packetBuffer[UDP_TX_PACKET_MAX_SIZE];  // buffer to hold incoming packet,
 char ReplyBuffer[] = "acknowledged";        // a string to send back
 int i;
-char chan[];
-char val[];
+int todFail;
+//char chan[];
+//char val[];
 
 // An EthernetUDP instance to let us send and receive packets over UDP
 EthernetUDP Udp;
@@ -113,12 +118,30 @@ void loop() {
 	/* This loop will show that there are zeroes in the str after tokenizing */
 	for (int i = 0; i < init_size; i++)
 	{
-		printf("%d ", str[i]); /* Convert the character to integer, in this case
-							   the character's ASCII equivalent */
+		printf("%d ", str[i]);    // Convert the character to integer, in this case
+    					      // the character's ASCII equivalent 			   
 	}
+  todFail = strtol(chan, ptr[0], 10);
+  if(todFail) {
+    printf("fuck youuuuu! chan");
+  }
+  todFail = strtol(valr, ptr[1], 10);
+  if(todFail) {
+    printf("fuck youuuuu! valr");
+  }
+  todFail = strtol(valg, ptr[2], 10);
+  if(todFail) {
+    printf("fuck youuuuu! valg");
+  }
+  todFail = strtol(valb, ptr[3], 10);
+  if(todFail) {
+    printf("fuck youuuuu! valb");
+  }
     Serial.println("Contents:");
     Serial.println(packetBuffer);
-	DmxSimple.write(chan, valr)
+	  DmxSimple.write(chan, valr);
+    DmxSimple.write(chan, valg);
+    DmxSimple.write(chan, valb);
 
     // send a reply to the IP address and port that sent us the packet we received
     Udp.beginPacket(Udp.remoteIP(), Udp.remotePort());
