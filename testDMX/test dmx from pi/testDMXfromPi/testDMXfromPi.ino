@@ -16,14 +16,15 @@
 #include <Ethernet.h>
 #include <EthernetUdp.h>
 #include <DmxSimple.h>
+#include <stdio.h>
+#include <errno.h>
+#include <stdlib.h>
 
-char str[20];
+char *str;
 char chanStr[3];
 char valStr[3];
-int chan;
-int valr;
-int valg;
-int valb;
+int valDMX[4];
+int count;
 
 // Enter a MAC address and IP address for your controller below.
 // The IP address will be dependent on your local network:
@@ -37,7 +38,6 @@ unsigned int localPort = 8888;      // local port to listen on
 // buffers for receiving and sending data
 char packetBuffer[UDP_TX_PACKET_MAX_SIZE];  // buffer to hold incoming packet,
 char ReplyBuffer[] = "acknowledged";        // a string to send back
-int i;
 int todFail;
 //char chan[];
 //char val[];
@@ -104,44 +104,31 @@ void loop() {
     // read the packet into packetBufffer
     Udp.read(packetBuffer, UDP_TX_PACKET_MAX_SIZE);
 	// char str[] = packetBuffer; 
-	int init_size = strlen(str);
-	char delim[] = " ";
-
-	char *ptr = strtok(packetBuffer, delim);
-
-	while(ptr != NULL)
-	{
-		printf("'%s'\n", ptr);
-		ptr = strtok(NULL, delim);
-	}
-
-	/* This loop will show that there are zeroes in the str after tokenizing */
-	for (int i = 0; i < init_size; i++)
-	{
-		printf("%d ", str[i]);    // Convert the character to integer, in this case
-    					      // the character's ASCII equivalent 			   
-	}
-  todFail = strtol(chan, ptr[0], 10);
-  if(todFail) {
-    printf("fuck youuuuu! chan");
+	int init_size = strlen(packetBuffer);
+  for(count = 0; count < init_size; count++) {
+    str[count] = packetBuffer[count];
   }
-  todFail = strtol(valr, ptr[1], 10);
-  if(todFail) {
-    printf("fuck youuuuu! valr");
-  }
-  todFail = strtol(valg, ptr[2], 10);
-  if(todFail) {
-    printf("fuck youuuuu! valg");
-  }
-  todFail = strtol(valb, ptr[3], 10);
-  if(todFail) {
-    printf("fuck youuuuu! valb");
-  }
+  
+  count = 0;
+    printf("Parsing '%s':\n", packetBuffer);
+    char *end;
+    for (long i = strtol(str, &end, 10); str != end; i = strtol(str, &end, 10))  {
+        printf("'%.*s' -> ", (int)(end-str), str);
+        str = end;
+        if (errno == ERANGE){
+            printf("range error, got ");
+            errno = 0;
+        }
+        printf("%ld\n", i);
+        valDMX[count] = i;
+        count++;
+    }
+  
     Serial.println("Contents:");
     Serial.println(packetBuffer);
-	  DmxSimple.write(chan, valr);
-    DmxSimple.write(chan, valg);
-    DmxSimple.write(chan, valb);
+	  DmxSimple.write(valDMX[0], valDMX[1]);
+    DmxSimple.write(valDMX[0], valDMX[2]);
+    DmxSimple.write(valDMX[0], valDMX[3]);
 
     // send a reply to the IP address and port that sent us the packet we received
     Udp.beginPacket(Udp.remoteIP(), Udp.remotePort());
