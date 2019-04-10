@@ -1,3 +1,6 @@
+//This is one of two codes that detect light intensity, from the photoresistor. 
+//The output gets displayed on the serial monitor.
+
 void setup()
 {
   // Set pin 5 as an input pin
