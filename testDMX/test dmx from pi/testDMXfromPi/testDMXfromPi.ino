@@ -25,6 +25,12 @@ char chanStr[3];
 char valStr[3];
 int valDMX[4];
 int count;
+char delim = " ";
+int ild;
+int jild = 0;
+char charsArr[4][3];
+char thing;
+char testArr[23];
 
 // Enter a MAC address and IP address for your controller below.
 // The IP address will be dependent on your local network:
@@ -33,7 +39,7 @@ byte mac[] = {
 };
 IPAddress ip(192, 168, 1, 177);
 
-unsigned int localPort = 8888;      // local port to listen on
+unsigned int localPort = 5004;      // local port to listen on
 
 // buffers for receiving and sending data
 char packetBuffer[UDP_TX_PACKET_MAX_SIZE];  // buffer to hold incoming packet,
@@ -103,15 +109,18 @@ void loop() {
 
     // read the packet into packetBufffer
     Udp.read(packetBuffer, UDP_TX_PACKET_MAX_SIZE);
-	// char str[] = packetBuffer; 
+
+ /*
 	int init_size = strlen(packetBuffer);
   for(count = 0; count < init_size; count++) {
     str[count] = packetBuffer[count];
   }
   
+  
   count = 0;
-    printf("Parsing '%s':\n", packetBuffer);
+    printf("Parsing '%s':\n", packetBuffer); 
     char *end;
+    
     for (long i = strtol(str, &end, 10); str != end; i = strtol(str, &end, 10))  {
         printf("'%.*s' -> ", (int)(end-str), str);
         str = end;
@@ -119,16 +128,46 @@ void loop() {
             printf("range error, got ");
             errno = 0;
         }
-        printf("%ld\n", i);
+        Serial.println(i);
+        Serial.println("");
         valDMX[count] = i;
         count++;
-    }
-  
+    }*/
+    /*for (ild=0; ild < 4; ild++){
+      while(packetBuffer[jild] != packetBuffer[1] && packetBuffer != " ") {
+      charsArr[ild][jild] = packetBuffer[jild];
+      jild++;
+      }
+      jild++;
+    }*/
+    valDMX[0] = atoi(charsArr[0][0]);
+    thing = charsArr[0][0];
+    valDMX[0] = atoi(thing);
+    valDMX[1] = atoi(charsArr[1][0]);
+    valDMX[2] = atoi(charsArr[2][0]);
+    valDMX[3] = atoi(charsArr[3][0]);
     Serial.println("Contents:");
     Serial.println(packetBuffer);
-	  DmxSimple.write(valDMX[0], valDMX[1]);
-    DmxSimple.write(valDMX[0], valDMX[2]);
-    DmxSimple.write(valDMX[0], valDMX[3]);
+    Serial.print("light ");
+    Serial.print(valDMX[0]);
+    Serial.print(", r ");
+    Serial.print(valDMX[1]);
+    Serial.print(", g ");
+    Serial.print(valDMX[2]);
+    Serial.print(", b ");
+    Serial.print(valDMX[3]);
+
+    DmxSimple.write(valDMX[0], 155);
+	  DmxSimple.write(((valDMX[0]-1)*7)+2, valDMX[1]);
+    DmxSimple.write(((valDMX[0]-1)*7)+3, valDMX[2]);
+    DmxSimple.write(((valDMX[0]-1)*7)+4, valDMX[3]);
+
+    /*
+    DmxSimple.write(packetBuffer[0], 150);
+    DmxSimple.write(2, 155);
+    DmxSimple.write(3, 255);
+    DmxSimple.write(4, 0);
+    */
 
     // send a reply to the IP address and port that sent us the packet we received
     Udp.beginPacket(Udp.remoteIP(), Udp.remotePort());
