@@ -205,8 +205,8 @@ class Control(QMainWindow):
         
     def sendInfo(self, red, blue, green, ard, light):
         print("Red: %d; Blue: %d; Green: %d; Light address: %d" % (red, blue, green, light))
-        sock.sendto(("%d %d %d %d %d" % (ard, light, red, green, blue)).encode('utf-8'), (UDP_IP, UDP_PORT))
-        print("%d %d %d %d %d" % (ard, light, red, green, blue))
+        sock.sendto(("%d %d %d %d %d " % (ard, light, red, green, blue)).encode('utf-8'), (UDP_IP, UDP_PORT))
+        print("%d %d %d %d %d " % (ard, light, red, green, blue))
         # print("%d %d %d %d %d" % (ard, light, red, green, blue).encode('utf-8'))
 		
     def exitButton(self):
@@ -321,8 +321,8 @@ class Control(QMainWindow):
     def sensorRead(self):
         return 200
         
-    def pingPong(self):
-        return [[1,1,1,1,1,1,1,1],[8,8,8,8,8,8,8,8]]
+    def pingPong(self): # array organized as len(arr[]) == number of arduinos, arr[][i] returns number of lights connected to arduino. Current usable max return [[1,1,1,1,1,1,1,1],[8,8,8,8,8,8,8,8]]
+        return [[1],[2]]
         
         
         

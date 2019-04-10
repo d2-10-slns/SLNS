@@ -133,13 +133,13 @@ void loop() {
         valDMX[count] = i;
         count++;
     }*/
-    /*for (ild=0; ild < 4; ild++){
-      while(packetBuffer[jild] != packetBuffer[1] && packetBuffer != " ") {
+    for (ild=0; ild < 4; ild++){
+      while(packetBuffer[jild] != " ") {
       charsArr[ild][jild] = packetBuffer[jild];
       jild++;
       }
       jild++;
-    }*/
+    }
     valDMX[0] = atoi(charsArr[0][0]);
     thing = charsArr[0][0];
     valDMX[0] = atoi(thing);
