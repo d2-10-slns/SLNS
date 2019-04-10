@@ -1,3 +1,4 @@
+//This code displays the light intensity on a LCD 16*2 screen
 
 /* 
  * ON PUBLIC DOMAIN
