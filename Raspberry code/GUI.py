@@ -5,6 +5,7 @@ from functools import partial
 import socket
 import platform
 import os
+import time
 
 from PyQt5.QtWidgets import (QMessageBox,QApplication, QWidget, QToolTip, QPushButton,
                              QDesktopWidget, QMainWindow, QAction, qApp, QToolBar, QVBoxLayout,
@@ -15,22 +16,25 @@ from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtGui import QIcon,QFont,QPixmap,QPalette, QColor
 from PyQt5.QtCore import QCoreApplication, Qt,QBasicTimer
 
-UDP_IP = "192.168.1.177"
+UDP_IP1 = "192.168.1.177"
+UDP_IP2 = "192.168.1.42"
+
 UDP_PORT = 5004
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+sock.settimeout(1.0)
 
 class Light():
     lightbtn = 0 
     lightname = ''    
     laddr = 0
-    lIP = "192.168.1.177"
+    lIP1 = "..."
+    lIP2 = "..."
     lard = 0
     redd = 255
     greenn = 0
     bluee = 0
     def __init__(self):
         lightbtn = 0
-        # print(lightbtn, self.laddr, self.redd, self.greenn, self.bluee)
         
 class Joe():
     lights = [[]]
@@ -64,32 +68,21 @@ class Control(QMainWindow):
             for j in range (numAL[1][i]):
                 self.elbows.lights[i+1].append(Light())
                 lightcount = lightcount + 1
-                # self.elbows.lights[i+1].append(Light())
                 self.elbows.lights[i+1][j].lightname = "light%d" % (lightcount)
                 self.elbows.lights[i+1][j].lightbtn = QPushButton(self)
                 self.elbows.lights[i+1][j].lightbtn.setText("Light %d" % (lightcount))
                 self.elbows.lights[i+1][j].lard = i+1
                 self.elbows.lights[i+1][j].laddr = j+1
-                # print(self.elbows.lights[1][j].lightname)
-                self.elbows.lights[i+1][j].lightbtn.clicked.connect(partial(self.lgtPressed1,i,j))
+                self.elbows.lights[i+1][j].lightbtn.clicked.connect(partial(self.lgtPressed,self.elbows.lights[i+1][j]))
                 self.elbows.lights[i+1][j].lightbtn.setStyleSheet("background-color: rgb(0,0,0);"
                                "border: 2px solid red;"
                                "color: rgb(255,255,255);"
                                "font: bold italic 12pt 'Times New Roman';")
                 self.elbows.lights[i+1][j].lightbtn.setGeometry(70 + 65*j,20 + 55*i,60,40)
-                # print(self.elbows.lights[1][j].lightname)
         
-        # self.elbows.lights[2].append(QPushButton(self))        
-        # print(self.elbows.lights[2])
-        # print(self.elbows.lights)
-
-        # print(self.elbows.lights[1][0].lightbtn)
-        # print(self.elbows.lights[1][1].lightbtn)
-        # print(self.elbows.lights[1][2].lightbtn)
-        # print(self.elbows.lights[1][3].lightbtn)
         
-        # self.elbows.lights[1][0].lightbtn.clicked.connect(lambda: self.lgtPressed(self.elbows.lights[1][0]))
         buttonNum = [1, 2]
+        self.elbows.lights[0][0].lIP = UDP_IP1       
         
         #size
         self.setFixedSize(800, 480)
@@ -97,11 +90,7 @@ class Control(QMainWindow):
         
         #Label2
         self.label2 = QLabel(self)
-        # print(self.elbows.lights)
-        for i in range(len(numAL[0])):
-            # print(i)
-            # box[i].setStyleSheet("border: 2px solid red;" )
-            # box[i].setGeometry(5,15+55*i,labelGeo[i],50) # 249         
+        for i in range(len(numAL[0])):       
 
             # Creates arduino buttons and places them on the window
             self.elbows.lights[0][i].setText("A%d" % (i+1))
@@ -112,67 +101,6 @@ class Control(QMainWindow):
                            "font: bold italic 10pt 'Times New Roman';")
             self.elbows.lights[0][i].setGeometry(10, 30+55*i, 35, 20)
             self.elbows.lights[0][i].raise_()
-            
-            # box[i].setStyleSheet("border: 2px solid red;" )
-            # box[i].setGeometry(5,15+55*i,labelGeo[i],50) # 249
-            
-            # for j in range(numAL[1][i]):
-                # Creates light buttons and places them on the window
-                # self.elbows.lights[1][j].lightbtn = QPushButton(self)
-                # self.elbows.lights[1][j].lightbtn.setText("Light %d" % (j+1))
-                # print(self.elbows.lights[1][j])
-                # self.elbows.lights[1][j].lightbtn.clicked.connect(lambda: self.lgtPressed(self.elbows.lights[1][j]))
-                # self.elbows.lights[1][j].lightbtn.setStyleSheet("background-color: rgb(0,0,0);"
-                               # "border: 2px solid red;"
-                               # "color: rgb(255,255,255);"
-                               # "font: bold italic 12pt 'Times New Roman';")
-                # self.elbows.lights[1][j].lightbtn.setGeometry(70 + 65*j,20,60,40)
-
-            
-        # print(self.elbows.lights[1][0].lightname)
-        
-        # if len(numAL[0]) > 1:
-            # Label2
-            # self.label3 = QLabel(self)
-
-            # self.label3.setStyleSheet("border: 2px solid red;" )
-            # self.label3.setGeometry(5,80,labelGeo[1],50)
-            
-            #ArduinoButts
-            # self.Abtn2 = QPushButton(self)
-            # self.Abtn2.setText("A1")
-            # self.Abtn.clicked.connect(self.pressedlgt1)
-            # self.Abtn2.setStyleSheet("background-color: rgb(0,0,0);"
-                                   # "border: 2px solid red;"
-                                   # "color: rgb(255,255,255);"
-                                   # "font: bold italic 10pt 'Times New Roman';")
-            # self.Abtn2.setGeometry(10,95,35,20)
-        
-        # Label2
-        # self.label4 = QLabel(self)
-
-        # self.label4.setStyleSheet(# "background-color: rgb(0,0,0);"
-                               # "border: 2px solid red;" )
-                               # "color: rgb(255,255,255);"
-                               # "font: bold italic 12pt 'Times New Roman';")
-        # self.label4.setGeometry(5,125,249,50)
-        
-        # Label2
-        # self.label5 = QLabel(self)
-        # self.label5.setStyleSheet(# "background-color: rgb(0,0,0);"
-                               # "border: 2px solid red;" )
-                               # "color: rgb(255,255,255);"
-                               # "font: bold italic 12pt 'Times New Roman';")
-        # self.label5.setGeometry(5,180,249,50)
-        
-        # Label2
-        # self.label6 = QLabel(self)
-
-        # self.label6.setStyleSheet(# "background-color: rgb(0,0,0);"
-                               # "border: 2px solid red;" )
-                               # "color: rgb(255,255,255);"
-                               # "font: bold italic 12pt 'Times New Roman';")
-        # self.label6.setGeometry(5,235,249,50)
 
         #Butts
         self.Ebtn = QPushButton(self)
@@ -183,16 +111,6 @@ class Control(QMainWindow):
                                "color: rgb(255,255,255);"
                                "font: bold italic 12pt 'Times New Roman';")
         self.Ebtn.setGeometry(735,20,60,40)
-        
-        # Label1
-        # self.label1 = QLabel(self)
-        # self.label1.setText("Sensor Reading: %d" % self.sensorRead())
-
-        # self.label1.setStyleSheet(# "background-color: rgb(0,0,0);"
-                               # "border: 2px solid red;" )
-                               # "color: rgb(255,255,255);"
-                               # "font: bold italic 12pt 'Times New Roman';")
-        # self.label1.setGeometry(350,200,120,40)
 
         self.show()
         
@@ -203,11 +121,16 @@ class Control(QMainWindow):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
         
-    def sendInfo(self, red, blue, green, ard, light):
-        print("Red: %d; Blue: %d; Green: %d; Light address: %d" % (red, blue, green, light))
-        sock.sendto(("%d %d %d %d %d " % (ard, light, red, green, blue)).encode('utf-8'), (UDP_IP, UDP_PORT))
+    def sendInfo(self, red, blue, green, ard, light, sendIP, sendIP2):
+        print("Red: %d; Blue: %d; Green: %d; Light address: %d" % (red, blue, green, light))       
         print("%d %d %d %d %d " % (ard, light, red, green, blue))
-        # print("%d %d %d %d %d" % (ard, light, red, green, blue).encode('utf-8'))
+        sock.sendto(("%d %d %d %d " % (light, red, green, blue)).encode('utf-8'), (sendIP, UDP_PORT)) 
+        try:
+            data, server = sock.recvfrom(1024)
+            end = time.time()
+            eapsed = end - start
+            print('{data}{pings}{elapsed}')
+            
 		
     def exitButton(self):
 	    sys.exit()
@@ -229,7 +152,7 @@ class Control(QMainWindow):
                 "border-width: 2px;" #"border-color: red;")
                 "border-color: rgb( %d, %d, %d);" % (colour.red(), colour.green(), colour.blue()))
                 
-            self.sendInfo(lightP.redd, lightP.bluee, lightP.greenn, lightP.lard+1, lightP.laddr+1)
+            self.sendInfo(lightP.redd, lightP.bluee, lightP.greenn, lightP.lard, lightP.laddr, lightP.lIP1, lightP.lIP2)
                 
         self.show()
         

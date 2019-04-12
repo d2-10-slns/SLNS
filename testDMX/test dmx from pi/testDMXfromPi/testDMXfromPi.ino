@@ -25,12 +25,15 @@ char chanStr[3];
 char valStr[3];
 int valDMX[4];
 int count;
-char delim = " ";
+//char delim = " ";
 int ild;
-int jild = 0;
-char charsArr[4][3];
+int jild;
+int nild;
+int charsArr[4][3];
 char thing;
 char testArr[23];
+int l;
+int titty[23];
 
 // Enter a MAC address and IP address for your controller below.
 // The IP address will be dependent on your local network:
@@ -94,21 +97,23 @@ void loop() {
   // if there's data available, read a packet
   int packetSize = Udp.parsePacket();
   if (packetSize) {
-    Serial.print("Received packet of size ");
-    Serial.println(packetSize);
-    Serial.print("From ");
+    //Serial.print("Received packet of size ");
+    //Serial.println(packetSize);
+    //Serial.print("From ");
     IPAddress remote = Udp.remoteIP();
     for (int i=0; i < 4; i++) {
-      Serial.print(remote[i], DEC);
+      //Serial.print(remote[i], DEC);
       if (i < 3) {
-        Serial.print(".");
+        //Serial.print(".");
       }
     }
-    Serial.print(", port ");
-    Serial.println(Udp.remotePort());	
+    //Serial.print(", port ");
+    //Serial.println(Udp.remotePort());	
 
     // read the packet into packetBufffer
     Udp.read(packetBuffer, UDP_TX_PACKET_MAX_SIZE);
+    //thing = Udp.read();
+    //Serial.println(l);
 
  /*
 	int init_size = strlen(packetBuffer);
@@ -133,31 +138,79 @@ void loop() {
         valDMX[count] = i;
         count++;
     }*/
+    /*titty[0] = Udp.read(); 
+    jild = 0;
     for (ild=0; ild < 4; ild++){
-      while(packetBuffer[jild] != " ") {
-      charsArr[ild][jild] = packetBuffer[jild];
+      while(titty[jild] != 32) {
       jild++;
+      titty[jild] = Udp.read();
+      Serial.println(titty[jild]);
       }
-      jild++;
+      Serial.println("goddamnit");
+    }*/
+    //charsArr[0][0] = packetBuffer[0];
+    for(jild = 0; jild < 4; jild++) {
+      for(nild = 0; nild < 3; nild++) {
+        charsArr[jild][nild] = '0';
+      }
     }
-    valDMX[0] = atoi(charsArr[0][0]);
-    thing = charsArr[0][0];
-    valDMX[0] = atoi(thing);
-    valDMX[1] = atoi(charsArr[1][0]);
-    valDMX[2] = atoi(charsArr[2][0]);
-    valDMX[3] = atoi(charsArr[3][0]);
+    jild = 2;
+    nild = 0;
+    //Serial.println("fuckoff were here now");
+    for(ild = 0; ild < UDP_TX_PACKET_MAX_SIZE; ild++) {
+      if(packetBuffer[ild] != ' ') {
+        charsArr[nild][jild] = packetBuffer[ild];
+       /* Serial.print(" char ");
+        Serial.print(charsArr[nild][jild]);
+        Serial.print(" nild = ");
+        Serial.print(nild);
+        Serial.print(" jild = ");
+        Serial.print(jild);*/
+        //Serial.println(packetBuffer[ild]);
+        jild--; 
+      }
+      else {
+        if(charsArr[nild][0] == '0'){
+          valDMX[nild] = (charsArr[nild][2]-'0') + ((charsArr[nild][1]-'0')*10);
+        }
+        else if(charsArr[nild][0] == '0' && charsArr[nild][1] == '0') {
+          valDMX[nild] = (charsArr[nild][2]-'0');
+        }
+        else {
+          valDMX[nild] = (charsArr[nild][0]-'0') + ((charsArr[nild][1]-'0')*10) + ((charsArr[nild][2]-'0')*100);
+        }
+        nild++;
+        jild = 2;
+      }
+      if (nild > 3) {
+        break;
+      }
+      
+    }
+    /*Serial.println();
+    //Serial.println(ild);
+    //l = charsArr[0];
+    //valDMX[0] = atoi(l);
+    //valDMX[0] = atoi(charsArr[0]);
+    //thing = charsArr[0][0];
+    //valDMX[0] = atoi(thing);
+    //valDMX[1] = atoi(charsArr[1]);
+    Serial.print("charsArr1[]: ");
+    //Serial.println(charsArr[1]);
+    //valDMX[2] = atoi(charsArr[2]);
+    //valDMX[3] = atoi(charsArr[3]);*/
     Serial.println("Contents:");
     Serial.println(packetBuffer);
-    Serial.print("light ");
-    Serial.print(valDMX[0]);
-    Serial.print(", r ");
-    Serial.print(valDMX[1]);
-    Serial.print(", g ");
-    Serial.print(valDMX[2]);
-    Serial.print(", b ");
-    Serial.print(valDMX[3]);
+    //Serial.print("light ");
+    //Serial.print(valDMX[0]);
+    //Serial.print(", r ");
+    //Serial.print(valDMX[1]);
+    //Serial.print(", g ");
+    //Serial.print(valDMX[2]);
+    //Serial.print(", b ");
+    //Serial.print(valDMX[3]);
 
-    DmxSimple.write(valDMX[0], 155);
+    DmxSimple.write(((valDMX[0]-1)*7)+1, 155);
 	  DmxSimple.write(((valDMX[0]-1)*7)+2, valDMX[1]);
     DmxSimple.write(((valDMX[0]-1)*7)+3, valDMX[2]);
     DmxSimple.write(((valDMX[0]-1)*7)+4, valDMX[3]);
