@@ -34,6 +34,7 @@ char thing;
 char testArr[23];
 int l;
 int titty[23];
+int failono;
 
 // Enter a MAC address and IP address for your controller below.
 // The IP address will be dependent on your local network:
@@ -100,6 +101,13 @@ void loop() {
     //Serial.print("Received packet of size ");
     //Serial.println(packetSize);
     //Serial.print("From ");
+    Udp.beginPacket(Udp.remoteIP(), Udp.remotePort());
+    //Serial.println(failono);
+    //Serial.println(Udp.remoteIP());
+    Udp.write(ReplyBuffer);
+    failono = Udp.endPacket();
+    Serial.println(failono);
+    
     IPAddress remote = Udp.remoteIP();
     for (int i=0; i < 4; i++) {
       //Serial.print(remote[i], DEC);
@@ -112,42 +120,7 @@ void loop() {
 
     // read the packet into packetBufffer
     Udp.read(packetBuffer, UDP_TX_PACKET_MAX_SIZE);
-    //thing = Udp.read();
-    //Serial.println(l);
 
- /*
-	int init_size = strlen(packetBuffer);
-  for(count = 0; count < init_size; count++) {
-    str[count] = packetBuffer[count];
-  }
-  
-  
-  count = 0;
-    printf("Parsing '%s':\n", packetBuffer); 
-    char *end;
-    
-    for (long i = strtol(str, &end, 10); str != end; i = strtol(str, &end, 10))  {
-        printf("'%.*s' -> ", (int)(end-str), str);
-        str = end;
-        if (errno == ERANGE){
-            printf("range error, got ");
-            errno = 0;
-        }
-        Serial.println(i);
-        Serial.println("");
-        valDMX[count] = i;
-        count++;
-    }*/
-    /*titty[0] = Udp.read(); 
-    jild = 0;
-    for (ild=0; ild < 4; ild++){
-      while(titty[jild] != 32) {
-      jild++;
-      titty[jild] = Udp.read();
-      Serial.println(titty[jild]);
-      }
-      Serial.println("goddamnit");
-    }*/
     //charsArr[0][0] = packetBuffer[0];
     for(jild = 0; jild < 4; jild++) {
       for(nild = 0; nild < 3; nild++) {
@@ -221,11 +194,6 @@ void loop() {
     DmxSimple.write(3, 255);
     DmxSimple.write(4, 0);
     */
-
-    // send a reply to the IP address and port that sent us the packet we received
-    Udp.beginPacket(Udp.remoteIP(), Udp.remotePort());
-    Udp.write(ReplyBuffer);
-    Udp.endPacket();
   }
   delay(10);
 }

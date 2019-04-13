@@ -27,8 +27,8 @@ class Light():
     lightbtn = 0 
     lightname = ''    
     laddr = 0
-    lIP1 = "..."
-    lIP2 = "..."
+    IP1 = "..."
+    IP2 = "..."
     lard = 0
     redd = 255
     greenn = 0
@@ -82,7 +82,8 @@ class Control(QMainWindow):
         
         
         buttonNum = [1, 2]
-        self.elbows.lights[0][0].lIP = UDP_IP1       
+        self.elbows.lights[1][0].IP1 = UDP_IP1     
+        self.elbows.lights[1][0].IP2 = UDP_IP2        
         
         #size
         self.setFixedSize(800, 480)
@@ -123,14 +124,29 @@ class Control(QMainWindow):
         
     def sendInfo(self, red, blue, green, ard, light, sendIP, sendIP2):
         print("Red: %d; Blue: %d; Green: %d; Light address: %d" % (red, blue, green, light))       
-        print("%d %d %d %d %d " % (ard, light, red, green, blue))
+        print("%s %d %d %d %d " % (sendIP, light, red, green, blue))
+        return_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        start = time.time()
         sock.sendto(("%d %d %d %d " % (light, red, green, blue)).encode('utf-8'), (sendIP, UDP_PORT)) 
         try:
-            data, server = sock.recvfrom(1024)
+            data, server = return_sock.recvfrom(1024)
             end = time.time()
-            eapsed = end - start
-            print('{data}{pings}{elapsed}')
-            
+            elapsed = end - start
+            print('{data}{elapsed}')
+        except socket.timeout:
+            print('REQUEST TIMED OUT')
+            print('trying secondary bus')
+            start = time.time()
+            sock.sendto(("%d %d %d %d " % (light, red, green, blue)).encode('utf-8'), (sendIP2, UDP_PORT))
+            try:
+                data, server = return_sock.recvfrom(1024)
+                end = time.time()               
+                elapsed = end - start
+                print('{data}{elapsed}')
+            except socket.timeout:
+                print('REQUEST TIMED OUT')
+                print('FATAL ERROR')
+                print('SECONDARY BUS DOWN')
 		
     def exitButton(self):
 	    sys.exit()
@@ -152,7 +168,7 @@ class Control(QMainWindow):
                 "border-width: 2px;" #"border-color: red;")
                 "border-color: rgb( %d, %d, %d);" % (colour.red(), colour.green(), colour.blue()))
                 
-            self.sendInfo(lightP.redd, lightP.bluee, lightP.greenn, lightP.lard, lightP.laddr, lightP.lIP1, lightP.lIP2)
+            self.sendInfo(lightP.redd, lightP.bluee, lightP.greenn, lightP.lard, lightP.laddr, lightP.IP1, lightP.IP2)
                 
         self.show()
         
