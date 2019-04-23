@@ -72,7 +72,7 @@ class Control(QMainWindow):
             self.elbows.lights.append([])
             box.append(QLabel(self))
             box[i].setStyleSheet("border: 2px solid red;" )
-            box[i].setGeometry(5,15+55*i,65+numAL[1][i]*65,50)
+            box[i].setGeometry(5,15+55*i, 60+numAL[1][i]*70,50)
             for j in range (numAL[1][i]):
                 self.elbows.lights[i+1].append(Light())
                 lightcount = lightcount + 1
@@ -86,7 +86,7 @@ class Control(QMainWindow):
                                "border: 2px solid red;"
                                "color: rgb(255,255,255);"
                                "font: bold italic 12pt 'Times New Roman';")
-                self.elbows.lights[i+1][j].lightbtn.setGeometry(70 + 65*j,20 + 55*i,60,40)
+                self.elbows.lights[i+1][j].lightbtn.setGeometry(70 + 69*j,20 + 55*i,66,40)
         
         
         buttonNum = [1, 2]
@@ -269,7 +269,7 @@ class Control(QMainWindow):
         return 200
         
     def pingPong(self): # array organized as len(arr[]) == number of arduinos, arr[][i] returns number of lights connected to arduino. Current usable max return [[1,1,1,1,1,1,1,1],[8,8,8,8,8,8,8,8]]
-        return [[1,1,1,1,1,1,1,1],[8,8,8,8,8,8,8,8]]
+        return [[1,1,1,1,1,1,1,1],[8,4,6,6,6,6,4,8]]
         
         
         
