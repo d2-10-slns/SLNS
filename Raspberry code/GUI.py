@@ -51,10 +51,18 @@ class Control(QMainWindow):
         
         self.elbows = Joe()
         box = []
-        lightcount = 0;
+        lightcount = 0
+        senseirData = 0
         
         numAL = self.pingPong()
         labelGeo=[]
+        
+        senseir = QLabel(self)
+        dateir = QLabel(self)
+        senseir.setText("Sensor Reading")
+        dateir.setText('%d' % senseirData)
+        senseir.setGeometry(660,395,100,40)
+        dateir.setGeometry(660,410,60,40)
         
         for i in range(len(numAL[0])):
             labelGeo.append(65+numAL[1][i]*65)
@@ -261,7 +269,7 @@ class Control(QMainWindow):
         return 200
         
     def pingPong(self): # array organized as len(arr[]) == number of arduinos, arr[][i] returns number of lights connected to arduino. Current usable max return [[1,1,1,1,1,1,1,1],[8,8,8,8,8,8,8,8]]
-        return [[1],[2]]
+        return [[1,1,1,1,1,1,1,1],[8,8,8,8,8,8,8,8]]
         
         
         
